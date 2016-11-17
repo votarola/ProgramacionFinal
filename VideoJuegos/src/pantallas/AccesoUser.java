@@ -38,7 +38,7 @@ public class AccesoUser extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setText("Ususario");
+        jLabel1.setText("Usuario");
 
         jLabel2.setText("Clave");
 
