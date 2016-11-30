@@ -6,6 +6,13 @@
 package pantallas;
 
 import java.awt.event.KeyEvent;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 
@@ -20,8 +27,13 @@ public class AccesoUser extends javax.swing.JFrame {
      */
     public AccesoUser() {
         initComponents();
+        centrar();
+        
     }
-
+    final void centrar (){
+    
+        this.setLocationRelativeTo(null);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -36,8 +48,8 @@ public class AccesoUser extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jButtonINGRESOUSUARIO = new javax.swing.JButton();
         jTextFieldUSUARIO = new javax.swing.JTextField();
-        jTextFieldCLAVEUSUARIO = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
+        txtcontra = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -73,17 +85,17 @@ public class AccesoUser extends javax.swing.JFrame {
             }
         });
 
-        jTextFieldCLAVEUSUARIO.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                jTextFieldCLAVEUSUARIOKeyReleased(evt);
-            }
-        });
-
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("Acceso Sistema de Video Juegos SnorGame");
         jLabel3.setToolTipText("");
         jLabel3.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+
+        txtcontra.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtcontraActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -96,15 +108,16 @@ public class AccesoUser extends javax.swing.JFrame {
                         .addComponent(jLabel3))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(85, 85, 85)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(92, 92, 92))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jTextFieldCLAVEUSUARIO, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 92, Short.MAX_VALUE)
-                                .addComponent(jTextFieldUSUARIO, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGap(103, 103, 103)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jTextFieldUSUARIO, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
+                            .addComponent(txtcontra)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(141, 141, 141)
                         .addComponent(jButtonINGRESOUSUARIO)))
@@ -122,7 +135,7 @@ public class AccesoUser extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jTextFieldCLAVEUSUARIO, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtcontra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(27, 27, 27)
                 .addComponent(jButtonINGRESOUSUARIO)
                 .addContainerGap(27, Short.MAX_VALUE))
@@ -150,9 +163,56 @@ public class AccesoUser extends javax.swing.JFrame {
 
     private void jButtonINGRESOUSUARIOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonINGRESOUSUARIOActionPerformed
         // TODO add your handling code here:
-        Menu abrir = new Menu();
-        abrir.setVisible(true);
-        this.setVisible(false);
+    //    Menu abrir = new Menu();
+    //    abrir.setVisible(true);
+    //    this.setVisible(false);
+     
+
+        
+        String usuario=jTextFieldUSUARIO.getText();
+        String pas=new String(txtcontra.getPassword());
+    acceder(usuario, pas);
+    }
+    
+    void acceder(String usuario, String pas)
+    {
+     String cap="tipousuario";
+       String sql="SELECT * FROM usuarios WHERE id_user='"+usuario+"' and clave='"+pas+"'";
+        try {
+            Statement st = cn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            while(rs.next())
+            {
+                cap=rs.getString("tipousuario");
+            }
+            if(cap.equals("A"))
+            {
+                  this.setVisible(false);
+                    JOptionPane.showMessageDialog(null, "Bienvenido");
+                     Menu ingreso = new Menu();
+                    ingreso.setVisible(true);
+                  //  ingreso.pack();
+                   //  Menu.lblusu.setText(usuario);
+        
+                
+            }
+            if(cap.equals("I"))
+            {
+                
+            this.setVisible(false);
+                    JOptionPane.showMessageDialog(null, "Bienvenido al sistema con privilegios de Invitado");
+                     IngresoNew ingresos = new IngresoNew();
+                    ingresos.setVisible(true);
+                   // ingresos.pack();
+                    // IngresoNew.lblconectado.setText(usuario);
+            }
+            if((!cap.equals("Administrador"))&& (!cap.equals("Invitado")))
+            {
+                }
+        } catch (SQLException ex) {
+            Logger.getLogger(AccesoUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       
     }//GEN-LAST:event_jButtonINGRESOUSUARIOActionPerformed
 
     private void jTextFieldUSUARIOKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldUSUARIOKeyReleased
@@ -162,11 +222,7 @@ public class AccesoUser extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jTextFieldUSUARIOKeyReleased
 
-    private void jTextFieldCLAVEUSUARIOKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldCLAVEUSUARIOKeyReleased
-        // TODO add your handling code here:
-   
-    }//GEN-LAST:event_jTextFieldCLAVEUSUARIOKeyReleased
-
+    
     private void jTextFieldUSUARIOKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldUSUARIOKeyPressed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldUSUARIOKeyPressed
@@ -191,6 +247,10 @@ public class AccesoUser extends javax.swing.JFrame {
             }
 
     }//GEN-LAST:event_jTextFieldUSUARIOKeyTyped
+
+    private void txtcontraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtcontraActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtcontraActionPerformed
 
     /**
      * @param args the command line arguments
@@ -233,7 +293,10 @@ public class AccesoUser extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField jTextFieldCLAVEUSUARIO;
-    private javax.swing.JTextField jTextFieldUSUARIO;
+    public static javax.swing.JTextField jTextFieldUSUARIO;
+    private javax.swing.JPasswordField txtcontra;
     // End of variables declaration//GEN-END:variables
+
+        conectar cc= new conectar();
+    Connection cn= cc.conexion();
 }

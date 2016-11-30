@@ -26,6 +26,7 @@ import javax.swing.table.DefaultTableModel;
  * @author votarola
  */
 public class Menu extends javax.swing.JFrame {
+    static Object lblusu;
 
     ResultSet rs = null;
     PreparedStatement pst=null;
@@ -34,11 +35,15 @@ public class Menu extends javax.swing.JFrame {
      */
     public Menu() {
         initComponents();
-    
-       
+        centrar();
+         
         
     }
 
+    final void centrar (){
+    
+        this.setLocationRelativeTo(null);
+    }
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -396,13 +401,13 @@ public class Menu extends javax.swing.JFrame {
         jPanelVENTASLayout.setVerticalGroup(
             jPanelVENTASLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelVENTASLayout.createSequentialGroup()
-                .addContainerGap(53, Short.MAX_VALUE)
+                .addContainerGap(56, Short.MAX_VALUE)
                 .addGroup(jPanelVENTASLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelVENTASLayout.createSequentialGroup()
                         .addGroup(jPanelVENTASLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel4)
-                            .addComponent(jTextField2NOMBREJUEGO, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(24, 24, 24)
+                            .addComponent(jTextField2NOMBREJUEGO, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4))
+                        .addGap(21, 21, 21)
                         .addGroup(jPanelVENTASLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
                             .addComponent(jTextFieldCANTIDADVENTA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -411,9 +416,7 @@ public class Menu extends javax.swing.JFrame {
                             .addComponent(jLabel7)
                             .addComponent(jTextField1PRECIO, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(21, 21, 21))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelVENTASLayout.createSequentialGroup()
-                        .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                    .addComponent(jScrollPane6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(jPanelVENTASLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelVENTASLayout.createSequentialGroup()
                         .addGroup(jPanelVENTASLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -489,13 +492,14 @@ public class Menu extends javax.swing.JFrame {
     private void jButtonVENTAJUEGOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVENTAJUEGOActionPerformed
         // TODO add your handling code here:
         try {
-            PreparedStatement pst = cn.prepareStatement("INSERT INTO ventas(nombre_juego ,cantidad ,precio,total) VALUES (?,?,?,?)");
+            PreparedStatement pst = cn.prepareStatement("INSERT INTO ventas(nombre_juego,cantidad,precio,total) VALUES (?,?,?,?)");
             pst.setString(1, jTextField2NOMBREJUEGO.getText());
             pst.setString(2, jTextFieldCANTIDADVENTA.getText());
             pst.setString(3, jTextField1PRECIO.getText());
             pst.setString(4, jTextFieldTOTALVENTA  .getText());
 
             pst.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Venta realizada con exito");
 
         } catch (Exception e) {
             System.out.print(e.getMessage());
@@ -536,17 +540,17 @@ public class Menu extends javax.swing.JFrame {
     private void jButtonINGRESOSTOCKJUEGOSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonINGRESOSTOCKJUEGOSActionPerformed
         // TODO add your handling code here:
 
+           String sql="UPDATE stock_juegos SET cantidad = '"+jTextFieldCANTIDADJUEGOS.getText()+"',tipo_juego ='"+jTextFieldTIPOJUEGOS.getText()+"' WHERE nombre_juegos ='"+jTextFieldNOMBREJUEGOS.getText()+"'";
+                   
         try {
-            PreparedStatement pst = cn.prepareStatement("UPDATE stock_juegos SET cantidad='"+jTextFieldCANTIDADJUEGOS.getText()+"',tipo_juego ='"+jTextFieldTIPOJUEGOS.getText()+"' WHERE nombre_juegos ='"+jTextFieldNOMBREJUEGOS.getText()+"'");
-            pst.setString(1, jTextFieldNOMBREJUEGOS.getText());
-            pst.setString(2, jTextFieldTIPOJUEGOS.getText());
-            pst.setString(3, jTextFieldCANTIDADJUEGOS.getText());
-
+            PreparedStatement pst = cn.prepareStatement(sql);
             pst.executeUpdate();
-            mostrardatos("");
-        } catch (Exception e) {
-            System.out.print(e.getMessage());
+            JOptionPane.showMessageDialog(null, "Actualizado");
+       
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, e);
         }
+       
     }//GEN-LAST:event_jButtonINGRESOSTOCKJUEGOSActionPerformed
 
     private void jTextFieldNOMBREJUEGOSKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldNOMBREJUEGOSKeyReleased
